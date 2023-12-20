@@ -50,7 +50,10 @@ func (lex *Lexer) NextToken() token.Token {
 		if isDigit(lex.ch) {
 			tok.Literal = lex.readInt()
 			tok.Type = token.INT
-            return tok
+			return tok
+		} else if isChar(lex.ch) {
+			tok = lex.readFunction()
+			return tok
 		} else {
 			tok = token.Token{Literal: lex.ch, Type: token.ILLEGAL}
 		}
@@ -89,6 +92,38 @@ func (lex *Lexer) readInt() string {
 	return lex.input[pos:lex.position]
 }
 
+func (lex *Lexer) readFunction() token.Token {
+	pos := lex.position
+
+	for isChar(lex.ch) {
+		lex.readChar()
+	}
+
+	functionLiteral := lex.input[pos:lex.position]
+
+	return token.Token{
+		Literal: functionLiteral,
+		Type:    lex.getFunctionType(functionLiteral),
+	}
+}
+
 func isDigit(ch string) bool {
 	return ch >= "0" && ch <= "9"
+}
+
+func isChar(ch string) bool {
+	return ch >= "a" && ch <= "z"
+}
+
+func (lex *Lexer) getFunctionType(literal string) string {
+	switch literal {
+	case "sin":
+		return token.SIN
+	case "cos":
+		return token.COS
+	case "tan":
+		return token.TAN
+	default:
+		return token.ILLEGAL
+	}
 }

@@ -4,12 +4,14 @@ import (
 	"calc/lexer"
 	"calc/token"
 	"fmt"
+	"math"
 	"strconv"
 )
 
 const (
 	_ = iota
 	LOWEST
+	FUNCS
 	SUM
 	PRODUCT
 	PREFIX
@@ -37,6 +39,10 @@ func Evaluate(lex *lexer.Lexer) int {
 		token.LPAREN: eval.evalGroupedExpression,
 
 		token.MINUS: eval.evalPrefixMinus,
+
+		token.SIN: eval.evalTrigsFuncs,
+		token.COS: eval.evalTrigsFuncs,
+		token.TAN: eval.evalTrigsFuncs,
 	}
 
 	eval.infixFns = map[string]func(int) int{
@@ -58,11 +64,6 @@ func Evaluate(lex *lexer.Lexer) int {
 
 	eval.nextToken()
 	eval.nextToken()
-
-	// for !eval.curTokenIs(token.EOL) {
-	// 	res := eval.evalExpression(LOWEST)
-	// 	fmt.Println(res)
-	// }
 
 	return eval.evalExpression(LOWEST)
 }
@@ -128,6 +129,31 @@ func (eval *Eval) evalPrefixMinus() int {
 	}
 
 	return -1 * eval.evalExpression(PREFIX)
+}
+
+func (eval *Eval) evalTrigsFuncs() int {
+	funcType := eval.curToken.Type
+
+	eval.nextToken()
+
+	angle := eval.evalExpression(GROUP)
+
+	radian := float64(angle) * (math.Pi / 180)
+
+	var val int
+
+	switch funcType {
+	case token.SIN:
+		val = int(math.Sin(radian))
+	case token.COS:
+		val = int(math.Cos(radian))
+	case token.TAN:
+		val = int(math.Tan(radian))
+	default:
+		val = -1
+	}
+
+	return val
 }
 
 func (eval *Eval) evalInfixExpression(left int) int {

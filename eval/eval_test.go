@@ -63,6 +63,22 @@ func TestEval(t *testing.T) {
 			input:    "(1+(6+(-4)))*3-(((-9999999)+10000000)+2)",
 			expected: 6,
 		},
+		{
+			input:    "sin(270)",
+			expected: -1,
+		},
+		{
+			input:    "tan(45) + 2",
+			expected: 3,
+		},
+		{
+			input:    "sin(270) - (-9)",
+			expected: 8,
+		},
+		{
+			input:    "tan(45) + (sin(270)+1)",
+			expected: 1,
+		},
 	}
 
 	for _, tt := range tests {
