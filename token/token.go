@@ -13,6 +13,8 @@ const (
 	SLASH   = "Slash"
     MOD = "Mod"
 
+    EXPONENT = "Exponent"
+
 	RPAREN = "Rparen"
 	LPAREN = "Lparen"
 

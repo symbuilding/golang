@@ -91,6 +91,15 @@ func TestEval(t *testing.T) {
 			input:    "(2000%2)+19%10",
 			expected: 9,
 		},
+
+		{
+			input:    "2**4",
+			expected: 16,
+		},
+		{
+			input:    "1+2**4*2",
+			expected: 33,
+		},
 	}
 
 	for _, tt := range tests {

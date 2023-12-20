@@ -7,7 +7,15 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-	input := "+*-   ( / *)  ;  123+69   sin(0)cos(0)tan(0)   1%2"
+	input := `
+        +*-
+        ( / *)
+        ;
+        123+69
+        sin(0)cos(0)tan(0)
+        1%2
+        11**20
+    `
 	lex := lexer.NewLexer(input)
 
 	expected_tokens := []token.Token{
@@ -44,6 +52,10 @@ func TestLexer(t *testing.T) {
 		{Literal: "1", Type: token.INT},
 		{Literal: "%", Type: token.MOD},
 		{Literal: "2", Type: token.INT},
+
+		{Literal: "11", Type: token.INT},
+		{Literal: "**", Type: token.EXPONENT},
+		{Literal: "20", Type: token.INT},
 
 		{Literal: "", Type: token.EOL},
 	}

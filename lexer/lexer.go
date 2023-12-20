@@ -35,7 +35,12 @@ func (lex *Lexer) NextToken() token.Token {
 	case "-":
 		tok = token.Token{Literal: lex.ch, Type: token.MINUS}
 	case "*":
-		tok = token.Token{Literal: lex.ch, Type: token.ASTERIC}
+        if string(lex.input[lex.readPosition]) == "*"{
+            tok = token.Token{Literal: "**", Type: token.EXPONENT}
+            lex.readChar()
+        } else {
+            tok = token.Token{Literal: lex.ch, Type: token.ASTERIC}
+        }
 	case "/":
 		tok = token.Token{Literal: lex.ch, Type: token.SLASH}
 	case "%":
