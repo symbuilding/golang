@@ -60,6 +60,10 @@ func Evaluate(lex *lexer.Lexer) int {
 		token.ASTERIC: PRODUCT,
 
 		token.LPAREN: GROUP,
+
+		token.SIN: FUNCS,
+		token.COS: FUNCS,
+		token.TAN: FUNCS,
 	}
 
 	eval.nextToken()
