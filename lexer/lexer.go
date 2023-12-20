@@ -35,12 +35,12 @@ func (lex *Lexer) NextToken() token.Token {
 	case "-":
 		tok = token.Token{Literal: lex.ch, Type: token.MINUS}
 	case "*":
-        if string(lex.input[lex.readPosition]) == "*"{
-            tok = token.Token{Literal: "**", Type: token.EXPONENT}
-            lex.readChar()
-        } else {
-            tok = token.Token{Literal: lex.ch, Type: token.ASTERIC}
-        }
+		if string(lex.input[lex.readPosition]) == "*" {
+			tok = token.Token{Literal: "**", Type: token.EXPONENT}
+			lex.readChar()
+		} else {
+			tok = token.Token{Literal: lex.ch, Type: token.ASTERIC}
+		}
 	case "/":
 		tok = token.Token{Literal: lex.ch, Type: token.SLASH}
 	case "%":
@@ -110,7 +110,7 @@ func (lex *Lexer) readFunction() token.Token {
 
 	return token.Token{
 		Literal: functionLiteral,
-		Type:    lex.getFunctionType(functionLiteral),
+		Type:    lex.getLiteralType(functionLiteral),
 	}
 }
 
@@ -122,7 +122,7 @@ func isChar(ch string) bool {
 	return ch >= "a" && ch <= "z"
 }
 
-func (lex *Lexer) getFunctionType(literal string) string {
+func (lex *Lexer) getLiteralType(literal string) string {
 	switch literal {
 	case "sin":
 		return token.SIN
@@ -130,6 +130,10 @@ func (lex *Lexer) getFunctionType(literal string) string {
 		return token.COS
 	case "tan":
 		return token.TAN
+	case "sqrt":
+		return token.SQRT
+	case "e":
+		return token.EULER
 	default:
 		return token.ILLEGAL
 	}

@@ -41,18 +41,24 @@ func Evaluate(lex *lexer.Lexer) float64 {
 
 		token.MINUS: eval.evalPrefixMinus,
 
-		token.SIN: eval.evalTrigsFuncs,
-		token.COS: eval.evalTrigsFuncs,
-		token.TAN: eval.evalTrigsFuncs,
+		token.SIN: eval.evalFuncs,
+		token.COS: eval.evalFuncs,
+		token.TAN: eval.evalFuncs,
+
+		token.SQRT: eval.evalFuncs,
 	}
 
 	eval.infixFns = map[string]func(float64) float64{
-		token.PLUS:     eval.evalInfixExpression,
-		token.MINUS:    eval.evalInfixExpression,
-		token.SLASH:    eval.evalInfixExpression,
-		token.ASTERIC:  eval.evalInfixExpression,
-		token.MOD:      eval.evalInfixExpression,
+		token.PLUS:    eval.evalInfixExpression,
+		token.MINUS:   eval.evalInfixExpression,
+		token.SLASH:   eval.evalInfixExpression,
+		token.ASTERIC: eval.evalInfixExpression,
+
+		token.MOD: eval.evalInfixExpression,
+
 		token.EXPONENT: eval.evalInfixExpression,
+
+		token.EULER: eval.evalInfixExpression,
 	}
 
 	eval.precedences = map[string]int{
@@ -64,12 +70,15 @@ func Evaluate(lex *lexer.Lexer) float64 {
 		token.MOD:     PRODUCT,
 
 		token.EXPONENT: HIGHEST,
+		token.EULER:    HIGHEST,
 
 		token.LPAREN: GROUP,
 
 		token.SIN: FUNCS,
 		token.COS: FUNCS,
 		token.TAN: FUNCS,
+
+		token.SQRT: FUNCS,
 	}
 
 	eval.nextToken()
@@ -141,13 +150,28 @@ func (eval *Eval) evalPrefixMinus() float64 {
 	return -1.00000 * eval.evalExpression(PREFIX)
 }
 
-func (eval *Eval) evalTrigsFuncs() float64 {
+func (eval *Eval) evalFuncs() float64 {
 	funcType := eval.curToken.Type
 
 	eval.nextToken()
 
-	angle := eval.evalExpression(GROUP)
+	arg := eval.evalExpression(GROUP)
 
+	var val float64
+
+	switch funcType {
+	case token.SIN, token.COS, token.TAN:
+		val = eval.evalTrigFuncs(funcType, arg)
+	case token.SQRT:
+		val = math.Sqrt(arg)
+	default:
+		val = -1.00000
+	}
+
+	return val
+}
+
+func (eval *Eval) evalTrigFuncs(funcType string, angle float64) float64 {
 	radian := angle * (math.Pi / 180)
 
 	var val float64
@@ -159,8 +183,6 @@ func (eval *Eval) evalTrigsFuncs() float64 {
 		val = math.Cos(radian)
 	case token.TAN:
 		val = math.Tan(radian)
-	default:
-		val = -1.00000
 	}
 
 	return val
@@ -193,6 +215,12 @@ func (eval *Eval) evalInfixExpression(left float64) float64 {
 
 	case "**":
 		val = math.Pow(left, right)
+
+	case "e":
+		if left != 1 {
+			fmt.Printf("Non one power 10 exponent, got %f", left)
+		}
+		val = math.Pow10(int(right))
 	}
 
 	return val

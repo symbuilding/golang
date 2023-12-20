@@ -16,6 +16,8 @@ func TestLexer(t *testing.T) {
         1%2
         11**20
         1.2+2.3
+        sqrt(2)
+        1e9
     `
 	lex := lexer.NewLexer(input)
 
@@ -61,6 +63,15 @@ func TestLexer(t *testing.T) {
 		{Literal: "1.2", Type: token.NUM},
 		{Literal: "+", Type: token.PLUS},
 		{Literal: "2.3", Type: token.NUM},
+
+		{Literal: "sqrt", Type: token.SQRT},
+		{Literal: "(", Type: token.LPAREN},
+		{Literal: "2", Type: token.NUM},
+		{Literal: ")", Type: token.RPAREN},
+
+		{Literal: "1", Type: token.NUM},
+		{Literal: "e", Type: token.EULER},
+		{Literal: "9", Type: token.NUM},
 
 		{Literal: "", Type: token.EOL},
 	}

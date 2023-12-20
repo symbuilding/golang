@@ -21,6 +21,9 @@ const (
     SIN = "Sin"
     COS = "Cos"
     TAN = "Tan"
+
+    SQRT = "Sqrt"
+    EULER = "Euler"
 )
 
 type Token struct {

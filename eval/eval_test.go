@@ -3,6 +3,7 @@ package eval_test
 import (
 	"calc/eval"
 	"calc/lexer"
+	"math"
 	"testing"
 )
 
@@ -103,6 +104,25 @@ func TestEval(t *testing.T) {
 		{
 			input:    "tan(45)+sin(90)+cos(0)**3",
 			expected: 3,
+		},
+
+		{
+			input:    "sqrt(1)",
+			expected: 1,
+		},
+		{
+			input:    "sqrt(2) + 1 * 2 + 1",
+			expected: math.Sqrt(2) + 3,
+		},
+
+		{
+			input:    "1e9",
+			expected: math.Pow10(9),
+		},
+
+		{
+			input:    "1e2+2",
+			expected: math.Pow10(2) + 2,
 		},
 	}
 
