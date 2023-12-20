@@ -27,6 +27,7 @@ func TestEval(t *testing.T) {
 			input:    "(1)",
 			expected: 1,
 		},
+
 		{
 			input:    "1 +    2",
 			expected: 3,
@@ -43,6 +44,7 @@ func TestEval(t *testing.T) {
 			input:    "7-6",
 			expected: 1,
 		},
+
 		{
 			input:    "1+(2*3)",
 			expected: 7,
@@ -63,6 +65,7 @@ func TestEval(t *testing.T) {
 			input:    "(1+(6+(-4)))*3-(((-9999999)+10000000)+2)",
 			expected: 6,
 		},
+ 
 		{
 			input:    "sin(270)",
 			expected: -1,
@@ -78,6 +81,15 @@ func TestEval(t *testing.T) {
 		{
 			input:    "tan(45) + (sin(270)+1)",
 			expected: 1,
+		},
+
+		{
+			input:    "2000%2",
+			expected: 0,
+		},
+		{
+			input:    "(2000%2)+19%10",
+			expected: 9,
 		},
 	}
 

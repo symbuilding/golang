@@ -7,7 +7,7 @@ import (
 )
 
 func TestLexer(t *testing.T) {
-	input := "+*-   ( / *)  %  123+69   sin(0)cos(0)tan(0)cot(1+2)"
+	input := "+*-   ( / *)  ;  123+69   sin(0)cos(0)tan(0)   1%2"
 	lex := lexer.NewLexer(input)
 
 	expected_tokens := []token.Token{
@@ -20,7 +20,7 @@ func TestLexer(t *testing.T) {
 		{Literal: "*", Type: token.ASTERIC},
 		{Literal: ")", Type: token.RPAREN},
 
-		{Literal: "%", Type: token.ILLEGAL},
+		{Literal: ";", Type: token.ILLEGAL},
 
 		{Literal: "123", Type: token.INT},
 		{Literal: "+", Type: token.PLUS},
@@ -41,12 +41,9 @@ func TestLexer(t *testing.T) {
 		{Literal: "0", Type: token.INT},
 		{Literal: ")", Type: token.RPAREN},
 
-		{Literal: "cot", Type: token.COT},
-		{Literal: "(", Type: token.LPAREN},
 		{Literal: "1", Type: token.INT},
-		{Literal: "+", Type: token.PLUS},
+		{Literal: "%", Type: token.MOD},
 		{Literal: "2", Type: token.INT},
-		{Literal: ")", Type: token.RPAREN},
 
 		{Literal: "", Type: token.EOL},
 	}

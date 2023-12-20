@@ -11,6 +11,7 @@ const (
 	MINUS   = "Minus"
 	ASTERIC = "Asteric"
 	SLASH   = "Slash"
+    MOD = "Mod"
 
 	RPAREN = "Rparen"
 	LPAREN = "Lparen"

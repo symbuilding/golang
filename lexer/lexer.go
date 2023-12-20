@@ -38,6 +38,8 @@ func (lex *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: lex.ch, Type: token.ASTERIC}
 	case "/":
 		tok = token.Token{Literal: lex.ch, Type: token.SLASH}
+	case "%":
+		tok = token.Token{Literal: lex.ch, Type: token.MOD}
 
 	case "(":
 		tok = token.Token{Literal: lex.ch, Type: token.LPAREN}

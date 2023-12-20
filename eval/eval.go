@@ -50,6 +50,7 @@ func Evaluate(lex *lexer.Lexer) int {
 		token.MINUS:   eval.evalInfixExpression,
 		token.SLASH:   eval.evalInfixExpression,
 		token.ASTERIC: eval.evalInfixExpression,
+		token.MOD:     eval.evalInfixExpression,
 	}
 
 	eval.precedences = map[string]int{
@@ -58,6 +59,7 @@ func Evaluate(lex *lexer.Lexer) int {
 
 		token.SLASH:   PRODUCT,
 		token.ASTERIC: PRODUCT,
+		token.MOD:     PRODUCT,
 
 		token.LPAREN: GROUP,
 
@@ -180,6 +182,8 @@ func (eval *Eval) evalInfixExpression(left int) int {
 		val = left * right
 	case "/":
 		val = left / right
+	case "%":
+		val = left % right
 	}
 
 	return val
