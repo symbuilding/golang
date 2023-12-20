@@ -9,7 +9,7 @@ import (
 func TestEval(t *testing.T) {
 	tests := []struct {
 		input    string
-		expected int
+		expected float64
 	}{
 		{
 			input:    "834224",
@@ -38,7 +38,7 @@ func TestEval(t *testing.T) {
 		},
 		{
 			input:    "7/6",
-			expected: 1,
+			expected: 7.0 / 6.0,
 		},
 		{
 			input:    "7-6",
@@ -65,7 +65,7 @@ func TestEval(t *testing.T) {
 			input:    "(1+(6+(-4)))*3-(((-9999999)+10000000)+2)",
 			expected: 6,
 		},
- 
+
 		{
 			input:    "sin(270)",
 			expected: -1,
@@ -100,6 +100,10 @@ func TestEval(t *testing.T) {
 			input:    "1+2**4*2",
 			expected: 33,
 		},
+		{
+			input:    "tan(45)+sin(90)+cos(0)**3",
+			expected: 3,
+		},
 	}
 
 	for _, tt := range tests {
@@ -108,7 +112,7 @@ func TestEval(t *testing.T) {
 		res := eval.Evaluate(lex)
 
 		if res != tt.expected {
-			t.Fatalf("expected %d got %d", tt.expected, res)
+			t.Fatalf("expected %f got %f", tt.expected, res)
 		}
 	}
 }

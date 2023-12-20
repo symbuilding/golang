@@ -20,8 +20,8 @@ const (
 )
 
 type Eval struct {
-	prefixFns   map[string]func() int
-	infixFns    map[string]func(int) int
+	prefixFns   map[string]func() float64
+	infixFns    map[string]func(float64) float64
 	precedences map[string]int
 
 	lex *lexer.Lexer
@@ -30,13 +30,13 @@ type Eval struct {
 	peekToken token.Token
 }
 
-func Evaluate(lex *lexer.Lexer) int {
+func Evaluate(lex *lexer.Lexer) float64 {
 	eval := &Eval{
 		lex: lex,
 	}
 
-	eval.prefixFns = map[string]func() int{
-		token.INT:    eval.evalIntegers,
+	eval.prefixFns = map[string]func() float64{
+		token.NUM:    eval.evalIntegers,
 		token.LPAREN: eval.evalGroupedExpression,
 
 		token.MINUS: eval.evalPrefixMinus,
@@ -46,7 +46,7 @@ func Evaluate(lex *lexer.Lexer) int {
 		token.TAN: eval.evalTrigsFuncs,
 	}
 
-	eval.infixFns = map[string]func(int) int{
+	eval.infixFns = map[string]func(float64) float64{
 		token.PLUS:     eval.evalInfixExpression,
 		token.MINUS:    eval.evalInfixExpression,
 		token.SLASH:    eval.evalInfixExpression,
@@ -78,7 +78,7 @@ func Evaluate(lex *lexer.Lexer) int {
 	return eval.evalExpression(LOWEST)
 }
 
-func (eval *Eval) evalExpression(precedence int) int {
+func (eval *Eval) evalExpression(precedence int) float64 {
 	prefix, ok := eval.prefixFns[eval.curToken.Type]
 
 	if !ok {
@@ -109,13 +109,13 @@ func (eval *Eval) nextToken() {
 	eval.peekToken = eval.lex.NextToken()
 }
 
-func (eval *Eval) evalIntegers() int {
-	val, _ := strconv.Atoi(eval.curToken.Literal)
+func (eval *Eval) evalIntegers() float64 {
+	val, _ := strconv.ParseFloat(eval.curToken.Literal, 64)
 
 	return val
 }
 
-func (eval *Eval) evalGroupedExpression() int {
+func (eval *Eval) evalGroupedExpression() float64 {
 	eval.nextToken()
 
 	val := eval.evalExpression(LOWEST)
@@ -130,43 +130,43 @@ func (eval *Eval) evalGroupedExpression() int {
 	return val
 }
 
-func (eval *Eval) evalPrefixMinus() int {
+func (eval *Eval) evalPrefixMinus() float64 {
 	eval.nextToken()
 
-	if !eval.curTokenIs(token.INT) {
+	if !eval.curTokenIs(token.NUM) {
 		fmt.Printf("Incorrect opearand for prefix minus, got %s\n", eval.curToken.Literal)
 		return -1
 	}
 
-	return -1 * eval.evalExpression(PREFIX)
+	return -1.00000 * eval.evalExpression(PREFIX)
 }
 
-func (eval *Eval) evalTrigsFuncs() int {
+func (eval *Eval) evalTrigsFuncs() float64 {
 	funcType := eval.curToken.Type
 
 	eval.nextToken()
 
 	angle := eval.evalExpression(GROUP)
 
-	radian := float64(angle) * (math.Pi / 180)
+	radian := angle * (math.Pi / 180)
 
-	var val int
+	var val float64
 
 	switch funcType {
 	case token.SIN:
-		val = int(math.Sin(radian))
+		val = math.Sin(radian)
 	case token.COS:
-		val = int(math.Cos(radian))
+		val = math.Cos(radian)
 	case token.TAN:
-		val = int(math.Tan(radian))
+		val = math.Tan(radian)
 	default:
-		val = -1
+		val = -1.00000
 	}
 
 	return val
 }
 
-func (eval *Eval) evalInfixExpression(left int) int {
+func (eval *Eval) evalInfixExpression(left float64) float64 {
 	operator := eval.curToken.Literal
 
 	precendence := eval.curPrecedence()
@@ -175,7 +175,7 @@ func (eval *Eval) evalInfixExpression(left int) int {
 
 	right := eval.evalExpression(precendence)
 
-	var val int
+	var val float64
 
 	switch operator {
 	case "+":
@@ -187,9 +187,12 @@ func (eval *Eval) evalInfixExpression(left int) int {
 	case "/":
 		val = left / right
 	case "%":
-		val = left % right
+		r := int(right)
+		l := int(left)
+		val = float64(l % r)
+
 	case "**":
-		val = int(math.Pow(float64(left), float64(right)))
+		val = math.Pow(left, right)
 	}
 
 	return val

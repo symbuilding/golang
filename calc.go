@@ -14,6 +14,6 @@ func main() {
 		fmt.Scanln(&input)
 
 		val := eval.Evaluate(lexer.NewLexer(input))
-		fmt.Printf(" %d\n", val)
+		fmt.Printf(" %f\n", val)
 	}
 }

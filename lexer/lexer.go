@@ -55,8 +55,8 @@ func (lex *Lexer) NextToken() token.Token {
 		tok = token.Token{Literal: "", Type: token.EOL}
 	default:
 		if isDigit(lex.ch) {
-			tok.Literal = lex.readInt()
-			tok.Type = token.INT
+			tok.Literal = lex.readNumber()
+			tok.Type = token.NUM
 			return tok
 		} else if isChar(lex.ch) {
 			tok = lex.readFunction()
@@ -89,7 +89,7 @@ func (lex *Lexer) skipWhitespaces() {
 	}
 }
 
-func (lex *Lexer) readInt() string {
+func (lex *Lexer) readNumber() string {
 	pos := lex.position
 
 	for isDigit(lex.ch) {
@@ -115,7 +115,7 @@ func (lex *Lexer) readFunction() token.Token {
 }
 
 func isDigit(ch string) bool {
-	return ch >= "0" && ch <= "9"
+	return (ch >= "0" && ch <= "9") || ch == "."
 }
 
 func isChar(ch string) bool {

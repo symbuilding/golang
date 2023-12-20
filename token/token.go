@@ -5,7 +5,7 @@ const (
 	ILLEGAL = "Illegal"
 	NULL = "NULL"
 
-    INT = "Int"
+    NUM = "Int"
 
 	PLUS    = "Plus"
 	MINUS   = "Minus"
